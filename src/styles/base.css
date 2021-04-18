@@ -1,0 +1,9 @@
+.NavLink {
+  font-size: 24px;
+  color: currentColor;
+  text-decoration: none;
+}
+
+.NavLink--active {
+  color: gold;
+}
