@@ -1,12 +1,32 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { API_KEY } from '../apiKey';
+import queryString from 'query-string';
 
 const MoviesPage = () => {
-  const [querySearch, setQuerySearch] = useState('');
+  const location = useLocation();
+  const queryParams = queryString.parse(location.search);
+
   const [films, setFilms] = useState([]);
   const match = useRouteMatch();
+
+  const history = useHistory();
+  const [querySearch, setQuerySearch] = useState(queryParams?.query || '');
+
+  useEffect(() => {
+    if (querySearch) {
+      history.push({
+        ...location,
+        search: `?query=${querySearch}`,
+      });
+      fetchFilms();
+    }
+  }, [querySearch]);
+
+  //  useEffect(() => {
+  //   fetchFilms();
+  //  }, [])
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -32,7 +52,17 @@ const MoviesPage = () => {
       <ul>
         {films.map(({ id, title }) => (
           <li key={id}>
-            <Link to={`${match.url}/${id}`}>{title}</Link>
+            <Link
+              to={{
+                pathname: `${match.url}/${id}`,
+                state: {
+                  from: location,
+                  querySearch,
+                },
+              }}
+            >
+              {title}
+            </Link>
           </li>
         ))}
       </ul>

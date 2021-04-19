@@ -10,7 +10,7 @@ const Reviews = ({ movieId }) => {
         setReviewsMovie(results);
       }
     });
-  });
+  }, []);
   return (
     <div>
       {reviewsMovie.length > 0 ? (

@@ -1,20 +1,13 @@
 import { useState, useEffect } from 'react';
-import Axios from 'axios';
-import { Link } from 'react-router-dom';
-import { API_KEY } from '../apiKey';
+import { Link, useLocation } from 'react-router-dom';
+import { popularFilmsApi } from '../services/api';
 
 const HomePage = () => {
   const [popularFilms, setPopularFilms] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
-    async function fetchApi() {
-      const { data } = await Axios.get(
-        `https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`,
-      );
-      setPopularFilms([...data.results]);
-      // console.log(data);
-    }
-    fetchApi();
+    popularFilmsApi().then(({ results }) => setPopularFilms(results));
   }, []);
 
   return (
@@ -23,7 +16,16 @@ const HomePage = () => {
       <ul>
         {popularFilms.map(({ id, title, name }) => (
           <li key={id}>
-            <Link to={`/movies/${id}`}>{title || name}</Link>
+            <Link
+              to={{
+                pathname: `/movies/${id}`,
+                state: {
+                  from: location,
+                },
+              }}
+            >
+              {title || name}
+            </Link>
           </li>
         ))}
       </ul>

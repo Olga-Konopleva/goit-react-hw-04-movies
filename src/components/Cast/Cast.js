@@ -12,7 +12,7 @@ const Cast = ({ movieId }) => {
         setCastMovie(cast);
       }
     });
-  });
+  }, []);
 
   return (
     <>
