@@ -6,17 +6,20 @@ import {
   useRouteMatch,
 } from 'react-router';
 import { Route, NavLink } from 'react-router-dom';
-import { fetchMovieDetails } from '../services/api';
-import defaultImage from '../images/notFoundImage.jpg';
-import routes from '../routes';
+import { fetchMovieDetails } from '../../services/api';
+import defaultImage from '../../images/notFoundImage.jpg';
+import routes from '../../routes';
 
 import Button from '@material-ui/core/Button';
+import styles from './MovieDetailsPage.module.scss';
 
 const Cast = lazy(() =>
-  import('../components/Cast/Cast' /* webpackChunkName: "home-page" */),
+  import('../../components/Cast/Cast' /* webpackChunkName: "home-page" */),
 );
 const Reviews = lazy(() =>
-  import('../components/Reviews/Reviews' /* webpackChunkName: "movies-page" */),
+  import(
+    '../../components/Reviews/Reviews' /* webpackChunkName: "movies-page" */
+  ),
 );
 
 const MovieDetailsPage = () => {
@@ -44,18 +47,6 @@ const MovieDetailsPage = () => {
     history.push(routes.home);
   };
 
-  // const {
-  //   original_title: title,
-  //   release_date: releaseDate,
-  //   vote_average: voteAvarage,
-  //   poster_path: posterPath,
-  //   overview,
-  //   genres,
-  // } = movie;
-
-  // const shouldDetailesRender =
-  //   title && releaseDate && voteAvarage && overview && genres;
-
   return (
     <>
       {error ? (
@@ -67,31 +58,39 @@ const MovieDetailsPage = () => {
         </div>
       ) : (
         <>
-          <div>
+          <div className={styles.container}>
             <Button
               type="button"
               onClick={handleGoBack}
               variant="outlined"
               color="primary"
+              className={styles.movieButton}
             >
               Go back
             </Button>
 
-            <img
-              src={
-                movie.poster_path
-                  ? `https://themoviedb.org/t/p/w500/${movie.poster_path}`
-                  : defaultImage
-              }
-              alt={movie.title}
-            />
-            <h1>{movie.title}</h1>
-            <p>User score: {movie.vote_average * 10} %</p>
-            <h3>Overview</h3>
-            <p>{movie.overview}</p>
-            <h3>Genres</h3>
-            {movie.genres &&
-              movie.genres.map(genre => <p key={genre.id}>{genre.name}</p>)}
+            <div className={styles.movieDetails}>
+              <img
+                className={styles.movieImg}
+                src={
+                  movie.poster_path
+                    ? `https://themoviedb.org/t/p/w500/${movie.poster_path}`
+                    : defaultImage
+                }
+                alt={movie.title}
+              />
+              <div>
+                <h1 className={styles.title}>{movie.title}</h1>
+                <p className={styles.descr}>
+                  User score: {movie.vote_average * 10} %
+                </p>
+                <h3 className={styles.titleDescr}>Overview</h3>
+                <p className={styles.descr}>{movie.overview}</p>
+                <h3 className={styles.titleDescr}>Genres</h3>
+                {movie.genres &&
+                  movie.genres.map(genre => <p key={genre.id}>{genre.name}</p>)}
+              </div>
+            </div>
           </div>
           <div>
             <h3>Additional informations</h3>
