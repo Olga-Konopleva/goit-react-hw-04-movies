@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { movieReviews } from '../../services/api';
+import PropTypes from 'prop-types';
 
 const Reviews = ({ movieId }) => {
   const [reviewsMovie, setReviewsMovie] = useState([]);
@@ -7,10 +8,12 @@ const Reviews = ({ movieId }) => {
   useEffect(() => {
     movieReviews(movieId).then(({ results }) => {
       if (results) {
+        console.log(results);
         setReviewsMovie(results);
       }
     });
   }, []);
+
   return (
     <div>
       {reviewsMovie.length > 0 ? (
@@ -27,6 +30,10 @@ const Reviews = ({ movieId }) => {
       )}
     </div>
   );
+};
+
+Reviews.propTypes = {
+  movieId: PropTypes.number.isRequired,
 };
 
 export default Reviews;

@@ -1,0 +1,18 @@
+.container {
+}
+
+.form {
+  display: flex;
+  margin: 25px auto;
+  height: 30px;
+  width: 400px;
+}
+
+.form__input {
+  width: 400px;
+  margin-right: 5px;
+  font-size: 18px;
+  &::placeholder {
+    font-size: 18px;
+  }
+}

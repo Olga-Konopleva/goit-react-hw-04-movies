@@ -4,7 +4,7 @@ import routes from './routes';
 import { lazy, Suspense } from 'react';
 
 const HomePage = lazy(() =>
-  import('./page/HomePage' /* webpackChunkName: "home-page" */),
+  import('./page/HomePage/HomePage' /* webpackChunkName: "home-page" */),
 );
 const MoviesPage = lazy(() =>
   import('./page/MoviesPage' /* webpackChunkName: "movies-page" */),

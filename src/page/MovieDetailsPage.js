@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState, lazy, Suspense } from 'react';
 import {
   useHistory,
@@ -11,6 +10,8 @@ import { fetchMovieDetails } from '../services/api';
 import defaultImage from '../images/notFoundImage.jpg';
 import routes from '../routes';
 
+import Button from '@material-ui/core/Button';
+
 const Cast = lazy(() =>
   import('../components/Cast/Cast' /* webpackChunkName: "home-page" */),
 );
@@ -20,14 +21,21 @@ const Reviews = lazy(() =>
 
 const MovieDetailsPage = () => {
   const [movie, setMovie] = useState({});
+  const [error, setError] = useState(null);
   const { movieId } = useParams();
   const match = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
 
   useEffect(() => {
-    fetchMovieDetails(movieId).then(data => setMovie(data));
+    getMovieDetails();
   }, []);
+
+  const getMovieDetails = () => {
+    fetchMovieDetails(movieId)
+      .then(movie => setMovie(movie))
+      .catch(error => setError(error));
+  };
 
   const handleGoBack = () => {
     if (location.state && location.state.from) {
@@ -36,42 +44,54 @@ const MovieDetailsPage = () => {
     history.push(routes.home);
   };
 
-  const {
-    original_title: title,
-    release_date: releaseDate,
-    vote_average: voteAvarage,
-    poster_path: posterPath,
-    overview,
-    genres,
-  } = movie;
+  // const {
+  //   original_title: title,
+  //   release_date: releaseDate,
+  //   vote_average: voteAvarage,
+  //   poster_path: posterPath,
+  //   overview,
+  //   genres,
+  // } = movie;
 
-  const shouldDetailesRender =
-    title && releaseDate && voteAvarage && overview && genres;
+  // const shouldDetailesRender =
+  //   title && releaseDate && voteAvarage && overview && genres;
 
   return (
     <>
-      {shouldDetailesRender ? (
+      {error ? (
+        <div>
+          <p>Not found</p>
+          <button type="button" onClick={handleGoBack}>
+            Go back
+          </button>
+        </div>
+      ) : (
         <>
           <div>
-            <button type="button" onClick={handleGoBack}>
+            <Button
+              type="button"
+              onClick={handleGoBack}
+              variant="outlined"
+              color="primary"
+            >
               Go back
-            </button>
-            <h1>{title}</h1>
+            </Button>
+
             <img
               src={
-                posterPath
-                  ? `https://themoviedb.org/t/p/w500/${posterPath}`
+                movie.poster_path
+                  ? `https://themoviedb.org/t/p/w500/${movie.poster_path}`
                   : defaultImage
               }
-              alt={title}
+              alt={movie.title}
             />
-            <p>User score: {voteAvarage * 10} %</p>
+            <h1>{movie.title}</h1>
+            <p>User score: {movie.vote_average * 10} %</p>
             <h3>Overview</h3>
-            <p>{overview}</p>
+            <p>{movie.overview}</p>
             <h3>Genres</h3>
-            {genres.map(genre => (
-              <p key={genre.id}>{genre.name}</p>
-            ))}
+            {movie.genres &&
+              movie.genres.map(genre => <p key={genre.id}>{genre.name}</p>)}
           </div>
           <div>
             <h3>Additional informations</h3>
@@ -103,13 +123,6 @@ const MovieDetailsPage = () => {
             </ul>
           </div>
         </>
-      ) : (
-        <div>
-          <p>Not found</p>
-          <button type="button" onClick={handleGoBack}>
-            Go back
-          </button>
-        </div>
       )}
 
       <Suspense fallback={<h1>Loading...</h1>}>

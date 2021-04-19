@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { movieCast } from '../../services/api';
+import PropTypes from 'prop-types';
 import defaultImage from '../../images/notFoundImage.jpg';
 
 const Cast = ({ movieId }) => {
@@ -33,6 +34,10 @@ const Cast = ({ movieId }) => {
       </div>
     </>
   );
+};
+
+Cast.propTypes = {
+  movieId: PropTypes.number.isRequired,
 };
 
 export default Cast;

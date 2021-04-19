@@ -1,0 +1,19 @@
+.nav {
+  margin-left: 20px;
+}
+
+.NavLink {
+  font-size: 28px;
+  color: black;
+  text-decoration: none;
+  &:not(:last-child) {
+    margin-right: 20px;
+  }
+  &:hover {
+    color: gold;
+  }
+}
+
+.NavLinkActive {
+  color: rgb(111, 0, 255);
+}
